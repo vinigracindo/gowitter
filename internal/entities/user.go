@@ -1,13 +1,15 @@
 package entities
 
+import "time"
+
 type User struct {
-	UUID      string `json:"uuid"`
-	Name      string `json:"name"`
-	Email     string `json:"email"`
-	Username  string `json:"username"`
-	Password  string `json:"password"`
-	CreatedAt string `json:"created_at"`
-	UpdatedAt string `json:"updated_at"`
+	UUID      string    `json:"uuid"`
+	Name      string    `json:"name"`
+	Email     string    `json:"email"`
+	Username  string    `json:"username"`
+	Password  string    `json:"password"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 type UserService interface {
