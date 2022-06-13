@@ -9,3 +9,11 @@ type User struct {
 	CreatedAt string `json:"created_at"`
 	UpdatedAt string `json:"updated_at"`
 }
+
+type UserService interface {
+	Create(name, email, username, password string) (*User, error)
+}
+
+type UserRepository interface {
+	Create(name, email, username, password string) (*User, error)
+}
