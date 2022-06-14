@@ -7,13 +7,14 @@ import (
 )
 
 type User struct {
-	UUID      uuid.UUID `json:"uuid"`
-	Name      string    `json:"name"`
-	Email     string    `json:"email"`
-	Username  string    `json:"username"`
-	Password  string    `json:"password"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	UUID      uuid.UUID
+	Name      string
+	Email     string
+	Username  string
+	Password  string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	Following []*User
 }
 
 func NewUser(name, email, username, password string) *User {
@@ -25,13 +26,37 @@ func NewUser(name, email, username, password string) *User {
 		Password:  password,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
+		Following: []*User{},
 	}
+}
+
+func (u *User) Follow(userToBeFollowed *User) error {
+	if u.UUID == userToBeFollowed.UUID {
+		return ErrCannotFollowYourself
+	}
+
+	if u.GetFollower(userToBeFollowed.UUID) != nil {
+		return ErrAlreadyFollowing
+	}
+	u.Following = append(u.Following, userToBeFollowed)
+	return nil
+}
+
+func (u *User) GetFollower(uuid uuid.UUID) *User {
+	for _, follower := range u.Following {
+		if follower.UUID == uuid {
+			return follower
+		}
+	}
+	return nil
 }
 
 type UserService interface {
 	Register(name, email, username, password string) (*User, error)
+	Follow(userUUID, userToBeFollowedUUID uuid.UUID) error
 }
 
 type UserRepository interface {
 	Create(name, email, username, password string) (*User, error)
+	FindByUUID(uuid uuid.UUID) (*User, error)
 }

@@ -23,3 +23,24 @@ func TestUserEntity_NewUser(t *testing.T) {
 		assert.NotZero(t, user.UpdatedAt)
 	})
 }
+
+func TestUserEntity_Follow(t *testing.T) {
+	user := entities.NewUser("John Doe", "john@doe.com", "johndoe", "secretpass")
+	userToBeFollowed := entities.NewUser("Patrick", "patrick@gmail.com", "patrick", "secretpass")
+
+	user.Follow(userToBeFollowed)
+
+	t.Run("check if user is following userToBeFollowed", func(t *testing.T) {
+		assert.Equal(t, user.Following[0], userToBeFollowed)
+	})
+
+	t.Run("user cannot follow yourself", func(t *testing.T) {
+		err := user.Follow(user)
+		assert.Equal(t, entities.ErrCannotFollowYourself, err)
+	})
+
+	t.Run("user cannot follow a user that is already following", func(t *testing.T) {
+		err := user.Follow(userToBeFollowed)
+		assert.Equal(t, entities.ErrAlreadyFollowing, err)
+	})
+}

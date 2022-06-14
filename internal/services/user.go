@@ -1,6 +1,9 @@
 package services
 
-import "github.com/vinigracindo/gowitter/internal/entities"
+import (
+	"github.com/google/uuid"
+	"github.com/vinigracindo/gowitter/internal/entities"
+)
 
 type service struct {
 	repo entities.UserRepository
@@ -16,4 +19,23 @@ func (s *service) Register(name, email, username, password string) (*entities.Us
 		return nil, err
 	}
 	return user, nil
+}
+
+func (s *service) Follow(userUUID, userToBeFollowedUUID uuid.UUID) error {
+	user, err := s.repo.FindByUUID(userUUID)
+	if err != nil {
+		return err
+	}
+
+	userToBeFollowed, err := s.repo.FindByUUID(userToBeFollowedUUID)
+	if err != nil {
+		return err
+	}
+
+	err = user.Follow(userToBeFollowed)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
