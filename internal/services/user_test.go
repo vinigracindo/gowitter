@@ -1,6 +1,7 @@
 package services_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -19,7 +20,6 @@ func TestUserService_Register(t *testing.T) {
 
 	t.Run("should create a user", func(t *testing.T) {
 		mockRepo := mocks.UserRepository{}
-		mockRepo.On("GetByUsername", "username").Return(nil, nil)
 		mockRepo.On("Create", "name", "email", "username", "password").Return(&entities.User{}, nil)
 		service := services.NewUserService(&mockRepo)
 
@@ -30,8 +30,7 @@ func TestUserService_Register(t *testing.T) {
 
 	t.Run("should return error when create user failed", func(t *testing.T) {
 		mockRepo := mocks.UserRepository{}
-		mockRepo.On("GetByUsername", "username").Return(nil, nil)
-		mockRepo.On("Create", "name", "email", "username", "password").Return(nil, entities.ErrUserAlreadyExists)
+		mockRepo.On("Create", "name", "email", "username", "password").Return(nil, fmt.Errorf("error"))
 		service := services.NewUserService(&mockRepo)
 
 		user, err := service.Register("name", "email", "username", "password")
