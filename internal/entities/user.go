@@ -34,4 +34,5 @@ type UserService interface {
 
 type UserRepository interface {
 	Create(name, email, username, password string) (*User, error)
+	GetByUsername(username string) (*User, error)
 }

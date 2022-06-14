@@ -35,6 +35,29 @@ func (_m *UserRepository) Create(name string, email string, username string, pas
 	return r0, r1
 }
 
+// GetByUsername provides a mock function with given fields: username
+func (_m *UserRepository) GetByUsername(username string) (*entities.User, error) {
+	ret := _m.Called(username)
+
+	var r0 *entities.User
+	if rf, ok := ret.Get(0).(func(string) *entities.User); ok {
+		r0 = rf(username)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*entities.User)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(username)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 type NewUserRepositoryT interface {
 	mock.TestingT
 	Cleanup(func())
