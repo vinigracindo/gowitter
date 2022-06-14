@@ -11,12 +11,6 @@ func NewUserService(repo entities.UserRepository) entities.UserService {
 }
 
 func (s *service) Register(name, email, username, password string) (*entities.User, error) {
-	userAlreadyExist, _ := s.repo.GetByUsername(username)
-
-	if userAlreadyExist != nil {
-		return nil, ErrUsernameMustBeUnique
-	}
-
 	user, err := s.repo.Create(name, email, username, password)
 	if err != nil {
 		return nil, err

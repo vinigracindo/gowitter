@@ -9,6 +9,12 @@ import (
 	"github.com/vinigracindo/gowitter/internal/services"
 )
 
+func TestUserService(t *testing.T) {
+	t.Run("UserService must implement UserService interface", func(t *testing.T) {
+		assert.Implements(t, (*entities.UserService)(nil), services.NewUserService(nil))
+	})
+}
+
 func TestUserService_Register(t *testing.T) {
 
 	t.Run("should create a user", func(t *testing.T) {
@@ -20,17 +26,6 @@ func TestUserService_Register(t *testing.T) {
 		user, err := service.Register("name", "email", "username", "password")
 		assert.NoError(t, err)
 		assert.NotNil(t, user)
-	})
-
-	t.Run("username must be unique", func(t *testing.T) {
-		mockRepo := mocks.UserRepository{}
-		mockRepo.On("GetByUsername", "username").Return(&entities.User{}, nil)
-		service := services.NewUserService(&mockRepo)
-
-		user, err := service.Register("name", "email", "username", "password")
-		assert.NotNil(t, err)
-		assert.EqualError(t, err, services.ErrUsernameMustBeUnique.Error())
-		assert.Nil(t, user)
 	})
 
 	t.Run("should return error when create user failed", func(t *testing.T) {
