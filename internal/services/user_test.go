@@ -9,14 +9,14 @@ import (
 	"github.com/vinigracindo/gowitter/internal/services"
 )
 
-func TestUserService_Create(t *testing.T) {
+func TestUserService_Register(t *testing.T) {
 
 	t.Run("should create a user", func(t *testing.T) {
 		mockRepo := mocks.UserRepository{}
 		mockRepo.On("Create", "name", "email", "username", "password").Return(&entities.User{}, nil)
 		service := services.NewUserService(&mockRepo)
 
-		user, err := service.Create("name", "email", "username", "password")
+		user, err := service.Register("name", "email", "username", "password")
 		assert.NoError(t, err)
 		assert.NotNil(t, user)
 	})
@@ -26,7 +26,7 @@ func TestUserService_Create(t *testing.T) {
 		mockRepo.On("Create", "name", "email", "username", "password").Return(nil, entities.ErrUserAlreadyExists)
 		service := services.NewUserService(&mockRepo)
 
-		user, err := service.Create("name", "email", "username", "password")
+		user, err := service.Register("name", "email", "username", "password")
 		assert.EqualError(t, err, entities.ErrUserAlreadyExists.Error())
 		assert.Nil(t, user)
 	})

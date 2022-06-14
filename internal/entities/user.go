@@ -13,7 +13,7 @@ type User struct {
 }
 
 type UserService interface {
-	Create(name, email, username, password string) (*User, error)
+	Register(name, email, username, password string) (*User, error)
 }
 
 type UserRepository interface {
