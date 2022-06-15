@@ -35,20 +35,21 @@ func (u *User) Follow(userToBeFollowed *User) error {
 		return ErrCannotFollowYourself
 	}
 
-	if u.GetFollower(userToBeFollowed.UUID) != nil {
+	if u.AlreadyFollowing(userToBeFollowed) {
 		return ErrAlreadyFollowing
 	}
+
 	u.Following = append(u.Following, userToBeFollowed)
 	return nil
 }
 
-func (u *User) GetFollower(uuid uuid.UUID) *User {
+func (u *User) AlreadyFollowing(user *User) bool {
 	for _, follower := range u.Following {
-		if follower.UUID == uuid {
-			return follower
+		if follower.UUID == user.UUID {
+			return true
 		}
 	}
-	return nil
+	return false
 }
 
 type UserService interface {
@@ -58,5 +59,6 @@ type UserService interface {
 
 type UserRepository interface {
 	Create(name, email, username, password string) (*User, error)
+	Update(user *User) error
 	FindByUUID(uuid uuid.UUID) (*User, error)
 }

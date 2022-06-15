@@ -37,5 +37,10 @@ func (s *service) Follow(userUUID, userToBeFollowedUUID uuid.UUID) error {
 		return err
 	}
 
+	err = s.repo.Update(user)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

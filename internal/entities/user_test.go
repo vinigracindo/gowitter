@@ -44,3 +44,19 @@ func TestUserEntity_Follow(t *testing.T) {
 		assert.Equal(t, entities.ErrAlreadyFollowing, err)
 	})
 }
+
+func TestUserEntity_AlreadyFollowing(t *testing.T) {
+	user := entities.NewUser("John Doe", "john@doe.com", "johndoe", "secretpass")
+	userToBeFollowed := entities.NewUser("Patrick", "patrick@gmail.com", "patrick", "secretpass")
+
+	t.Run("user cannot get follower that is not following", func(t *testing.T) {
+		assert.False(t, user.AlreadyFollowing(userToBeFollowed))
+	})
+
+	user.Follow(userToBeFollowed)
+
+	t.Run("user can get follower that is following", func(t *testing.T) {
+		assert.True(t, user.AlreadyFollowing(userToBeFollowed))
+	})
+
+}
